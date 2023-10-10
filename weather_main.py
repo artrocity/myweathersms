@@ -1,12 +1,14 @@
 # Import libraries
 import requests
+from twilio.rest import Client
 
 
 def main():
     weather_data = make_api_connection()
     if weather_data:
         weather_id = get_current_weather(weather_data)
-        check_weather(weather_id)
+        message = check_weather(weather_id)
+        text_weather_details(message)
 
 
 def make_api_connection() -> list[dict]:
@@ -20,9 +22,9 @@ def make_api_connection() -> list[dict]:
     """
     # Set API parameters
     parameters = {
-        "lat" : "insert your value here",
-        "lon" : "insert your value here",
-        "appid" : "insert your value here"
+        "lat" : 37.687176,
+        "lon" : -97.330055,
+        "appid" : "48f05eecbd8328ad9353b4ab488b3ace"
     }
 
     # Attempt to obtain API
@@ -51,7 +53,7 @@ def get_current_weather(weather:list[dict]) -> int:
     return weather_id
 
 
-def check_weather(weather_id:int) -> None:
+def check_weather(weather_id:int) -> str:
     """
     Summary:
         Takes an int as input and compares it vs known Openweathermap Weather Codes 
@@ -59,18 +61,39 @@ def check_weather(weather_id:int) -> None:
     Args:
         weather_id (int): Takes an ID code as an argument
     Returns:
-        None: Prints a statement
+        None: Sends an sms with current weather data
     Called by:
         main()
     """
     if 200 <= weather_id <= 600:
-        print("It's going to rain, bring an umbrella")
+        return "Its raining outside, bring an umbrella" 
     elif 600 <= weather_id <= 700:
-        print("It's going to snow, dress warm")
+        return "It's going to snow, dress warm"
     elif weather_id == 800:
-        print("It's going to be a clear day! Enjoy the sun.")
+        return "It's going to be a clear day! Enjoy the sun."
     elif weather_id > 800:
-        print("It's going to be cloudy outside")
+        return "It's going to be cloudy outside"
+
+
+def text_weather_details(message:str) -> None:
+     """
+    Summary:
+        Takes a message as a parameter and then sends the message via sms using Twilio
+    Args:
+        message (_type_): Takes a message and then sends it via the 'body' portion
+    Returns:
+        None
+    Called by:
+        main()
+    """
+    account_sid = "your account soid"
+    auth_token = "your auth token"
+    client = Client(account_sid, auth_token)
+    text_message = client.messages.create(
+            body=message,
+            from_="Your Twilio Number Here"
+            to="The number youd like to send the message to",  
+        )
 
 
 if __name__ == "__main__":

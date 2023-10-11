@@ -3,7 +3,7 @@ Weather Information App
 
 # Summary
     Uses Openweathermap and sends an API request for current weather data. Compares the weather ID code to tell you the current days atmospheric 
-    conditions
+    conditions via a sms text message
 
 ## Libraries/Modules
     -requests
@@ -19,5 +19,4 @@ Weather Information App
  #### Design implementations
     - In order to work more with APIs I have decided to use this version to text via the Twilio app
 
-##### TODO
-    - Implement a text sms feature to text you the current atmospheric conditions at a set time each day
+
